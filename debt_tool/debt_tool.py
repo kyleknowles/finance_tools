@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 def interest_sort(debt):
     return debt['interest']
 
-
-
 debtList = []
 TOTAL_DEBT = 0
 

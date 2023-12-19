@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="financetools.css" />
+   <title>Finance Tools</title>
+   <h1>Debt Payoff Calculator</h1>
+</head>
+<body>
+    <label for="debtNum">Number of Debts:</label>
+    <input type="text" id="debtNum" name="debtNum" placeholder="0">
+
+    <button onclick="addDebts()">Enter</button>
+
+    <div id="output"></div>
+    <script>
+
+        var startDebt = 0;
+
+        var containers = [];
+        function addDebts() {
+            var debtNum = parseInt(document.getElementById("debtNum").value);
+            if (!isNaN(debtNum)) {
+                var existingButton = document.getElementById("addButton");
+                if (existingButton) {
+                    document.body.removeChild(existingButton);
+                }
+
+               
+                var incContainer = document.getElementById("incContainer");
+                if (incContainer) {
+                    document.body.removeChild(incContainer);
+                }
+                
+                
+                
+
+
+                if (startDebt > debtNum) {
+                    var difference = startDebt - debtNum;
+                    for (var z = 0; z < difference; z++) {
+
+                        var lastContainer = containers.pop();
+                        document.body.removeChild(lastContainer);
+                        startDebt = startDebt - 1;
+                    }
+
+                } else {
+                    for (var i = startDebt; i < debtNum; i++) {
+                        startDebt = startDebt + 1;
+                        var container = document.createElement("div");
+                        container.appendChild(document.createElement("br"));
+                        document.body.appendChild(container);
+
+                        
+
+                        for (var y = 0; y < 4; y++) {
+                                
+                            var label = document.createElement("label");
+
+                            var newInput = document.createElement("input");
+                            newInput.type = "text";
+                            newInput.name = "dynamicInput";
+                            newInput.placeholder = "enter";
+
+                            if (y == 0) { 
+                               
+                                label.for = "debtName" + (i+1);
+                                label.innerHTML = " Debt " + (i + 1) + " Name: ";
+                                newInput.id = "debtName" + (i+1);
+                                newInput.placeholder = "Enter";
+                    
+                            } else if (y == 1) {
+                               
+                                label.for = "debtAmount" +  (i+1);
+                                label.innerHTML = "  Debt Amount $";
+                                newInput.id = "debtAmount" +  (i+1);
+                                newInput.placeholder = "0";
+                    
+                            } else if (y == 2) {
+                                
+                                label.for = "debtInterest" +  (i+1);
+                                label.innerHTML = "  Interest Rate(%): ";
+                                newInput.id = "debtInterest" +  (i+1);
+                                newInput.placeholder = "0";
+                                    
+                            } else { // y == 3
+                             
+                                label.for = "debtMin" + (i+1);
+                                label.innerHTML = "  Min Monthly Payment: $";
+                                newInput.id = "debtMin" + (i+1);
+                                newInput.placeholder = "0";
+                            }
+
+                            container.appendChild(label);
+                            container.appendChild(newInput);
+                            container.appendChild(document.createElement("br"));
+                                
+                        }
+                        document.body.appendChild(container);
+                        containers.push(container);
+
+                    }
+                }
+                if (debtNum > 0) {
+
+                    var container2 = document.createElement("div");
+                    container2.id = "incContainer";
+
+                    container2.appendChild(document.createElement("br"));
+
+                    var incomeInput = document.createElement("input");
+                    incomeInput.type = "text";
+                    incomeInput.name = "dynamicInput";
+                    incomeInput.placeholder = "enter";
+                        
+                    var incomeLabel = document.createElement("label");
+                    incomeLabel.for = "income";
+                    incomeLabel.innerHTML = "Monthly Take-Home Income: $";
+                    incomeInput.id = "income";
+                    incomeInput.placeholder = "0"
+
+
+                    container2.appendChild(incomeLabel);
+                    container2.appendChild(incomeInput);
+
+                    container2.appendChild(document.createElement("br"));
+
+                    var expensesInput = document.createElement("input");
+                    expensesInput.type = "text";
+                    expensesInput.name = "dynamicInput";
+                    expensesInput.placeholder = "0";
+
+                    var expensesLabel = document.createElement("label");
+                    expensesLabel.for = "expenses";
+                        
+                    expensesLabel.innerHTML = "Monthly Expenses (not including debt): $";
+                    expensesInput.id = "expenses";
+                    expensesInput.placeholder = "0"
+
+                    container2.appendChild(expensesLabel);
+                    container2.appendChild(expensesInput);
+
+                    container2.appendChild(document.createElement("br"));
+                    document.body.appendChild(container2);
+
+                    
+                    var addButton = document.createElement("button");
+                    addButton.id = "addButton"
+                    addButton.innerHTML = "Calculate";
+                    addButton.onclick = function() {
+                        calculateDebts(); 
+                    };
+                    document.body.appendChild(addButton);
+                }
+
+            } else {
+                alert("Please enter a valid number.");
+            }
+        }
+    
+        function calculateDebts() {
+            var debtList = [];
+            var TOTAL_DEBT = 0;
+
+            function interestSort(debt) {
+                return debt['interest'];
+            }
+            
+            for (var i = 1; i <= startDebt; i++) {
+                var debtName = document.getElementById("debtName" + i).value;
+                var debtAmount = parseFloat(document.getElementById("debtAmount" + i).value);
+                var debtInterest = parseFloat(document.getElementById("debtInterest" + i).value);
+                var debtMin = parseFloat(document.getElementById("debtMin" + i).value);
+                var debtInfo = {
+                                'name': debtName,
+                                'amount': debtAmount,
+                                'interest': debtInterest,
+                                'min_mp': debtMin,
+                                'month_pay': 0
+                              };
+
+                debtList.push(debtInfo);
+                TOTAL_DEBT += debtAmount;
+            }
+
+            debtList.sort((a, b) => interestSort(b) - interestSort(a));
+
+            var textt = document.createElement("p");
+                
+            textt.innerHTML = "Starting Total Debt: $" + TOTAL_DEBT;
+    
+            document.body.appendChild(textt);
+
+            var monthIncome = parseFloat(document.getElementById("income").value);
+            var monthExpenses = parseFloat(document.getElementById("expenses").value);
+            var incomePostExpenses = monthIncome - monthExpenses;
+
+            var textt2 = document.createElement("p");
+            textt2.innerHTML = "Monthly Income Afer Expenses: $" + incomePostExpenses;        
+
+
+            document.body.appendChild(textt2);
+            
+            // Initialize Values
+            var month = 1;
+            //var Total_DoT = [TOTAL_DEBT];
+            //var debtTime = [debtList.map(d => d['amount'])];
+
+            while (TOTAL_DEBT > 0) {
+               
+
+                var money_left = incomePostExpenses;
+                
+                var text2 = document.createElement("p");
+                text2.innerHTML = "Month " + month + ":";
+                document.body.appendChild(text2);
+
+                var text3 = document.createElement('p');
+                text2.innerHTML = " STARTING TOTAL DEBT: $" + TOTAL_DEBT.toFixed(2);
+                document.body.appendChild(text3);
+
+                TOTAL_DEBT = 0; //Delete
+                    
+            }
+        }
+
+    </script>
+</body>
+</html>
