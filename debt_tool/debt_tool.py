@@ -89,6 +89,7 @@ while (TOTAL_DEBT > 0):
 print("Month " + str(month) + ":")
 print(" DEBT FULLY PAID OFF BITCHES")
 
+
 # Plotting
 months = np.linspace(1,len(Total_DoT),num=len(Total_DoT),endpoint=True)
 fig, ax = plt.subplots()
@@ -99,6 +100,8 @@ ax.plot(months, Total_DoT) # Plot Total Debt Over Time
 for debt in range(len(debtList)):
     debtHistory = [debtMonth[debt] for debtMonth in debtTime]
     ax.plot(months, debtHistory)
+
+
 
 plt.legend(['Total Debt'] + [d['name'] for d in debtList]) # Add Legend
 

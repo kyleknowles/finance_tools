@@ -6,6 +6,11 @@
    <link rel="stylesheet" href="financetools.css" />
    <title>Finance Tools</title>
    <h1>Debt Payoff Calculator</h1>
+   <h4>This program gives you the mathematically best way to pay off your debt, using the avalanche method.
+    
+   </h4>
+
+   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <label for="debtNum">Number of Debts:</label>
@@ -13,13 +18,13 @@
 
     <button onclick="addDebts()">Enter</button>
 
-    <div id="output"></div>
     <script>
-
+    
         var startDebt = 0;
 
         var containers = [];
         function addDebts() {
+            Clear();
             var debtNum = parseInt(document.getElementById("debtNum").value);
             if (!isNaN(debtNum)) {
                 var existingButton = document.getElementById("addButton");
@@ -158,6 +163,23 @@
         }
     
         function calculateDebts() {
+
+
+            var schContainer = document.createElement("div");
+            schContainer.for = "schContainer";
+            schContainer.id = "schContainer";
+
+            Clear();
+
+            var clearButton = document.createElement("button");
+            clearButton.id = "clearButton"
+            clearButton.innerHTML = "Clear";
+            clearButton.onclick = function() {
+                Clear(); 
+            };
+            document.body.appendChild(clearButton);
+
+
             var debtList = [];
             var TOTAL_DEBT = 0;
 
@@ -170,60 +192,77 @@
                 var debtAmount = parseFloat(document.getElementById("debtAmount" + i).value);
                 var debtInterest = parseFloat(document.getElementById("debtInterest" + i).value);
                 var debtMin = parseFloat(document.getElementById("debtMin" + i).value);
-                var debtInfo = {
-                                'name': debtName,
-                                'amount': debtAmount,
-                                'interest': debtInterest,
-                                'min_mp': debtMin,
-                                'month_pay': 0
-                              };
+                
+                if (!isNaN(debtAmount) && !isNaN(debtInterest) && !isNaN(debtMin)) { 
+                    var debtInfo = {
+                                    'name': debtName,
+                                    'amount': debtAmount,
+                                    'interest': debtInterest,
+                                    'min_mp': debtMin,
+                                    'month_pay': 0
+                                };
 
-                debtList.push(debtInfo);
-                TOTAL_DEBT += debtAmount;
+                    debtList.push(debtInfo);
+                    TOTAL_DEBT += debtAmount;
+                } else {
+                    document.body.removeChild(clearButton);
+                    alert("Please enter a valid number.");
+                    return 0;
+                }
             }
 
             debtList.sort((a, b) => interestSort(b) - interestSort(a));
 
-            var textt = document.createElement("p");
-                
-            textt.innerHTML = "Starting Total Debt: $" + TOTAL_DEBT;
+            
+            var totalDebt = document.createElement("p");
+
+            
+            totalDebt.innerHTML = "Starting Total Debt: $" + TOTAL_DEBT;
     
-            document.body.appendChild(textt);
+            schContainer.appendChild(totalDebt);
 
             var monthIncome = parseFloat(document.getElementById("income").value);
             var monthExpenses = parseFloat(document.getElementById("expenses").value);
             var incomePostExpenses = monthIncome - monthExpenses;
 
-            var textt2 = document.createElement("p");
-            textt2.innerHTML = "Monthly Income Afer Expenses: $" + incomePostExpenses;        
+            var postIncome = document.createElement("p");
+            postIncome.innerHTML = "Monthly Income After Expenses: $" + incomePostExpenses;        
 
+            if (!isNaN(TOTAL_DEBT) && !isNaN(incomePostExpenses)) {
+                alert("Please enter a valid number.");
+                return 0;
+            }
+                
 
-            document.body.appendChild(textt2);
+            schContainer.appendChild(postIncome);
             
             // Initialize Values
             var month = 1;
             var Total_DoT = [TOTAL_DEBT];
-            //var debtTime = [debtList.map(d => d['amount'])];
+            var debtTime = [debtList.map(d => d['amount'])];
+
+            
 
             
             while (TOTAL_DEBT > 0) {
-                document.body.appendChild(document.createElement("br"));
+                schContainer.appendChild(document.createElement("br"));
 
                 var money_left = incomePostExpenses;
                 
                 var text2 = document.createElement("p");
                 text2.innerHTML = "Month " + month + ":";
-                document.body.appendChild(text2);
+                schContainer.appendChild(text2);
 
                 var text3 = document.createElement('p');
                 text3.innerHTML = " STARTING TOTAL DEBT: $" + TOTAL_DEBT.toFixed(2);
-                document.body.appendChild(text3);
-
-                TOTAL_DEBT -= 1; //Delete
+                schContainer.appendChild(text3);
                 month++;
 
                 // update dict values (min mps and monthly totals )
                 // pay min mps
+
+
+
                 for (var x = 0; x < debtList.length; x++) {
                     // update dictionary values
                     var debt = debtList[x];
@@ -246,7 +285,7 @@
                 }
                 TOTAL_DEBT = 0;
 
-                     // pay BEYOND min mps
+                 // pay BEYOND min mps
                 for (var z = 0; z < debtList.length; z++) {
                     var debt = debtList[z];
                     if (debt['amount'] <= money_left) {
@@ -264,27 +303,88 @@
                     TOTAL_DEBT += debt['amount'];   
                     var text4 = document.createElement('p');
                     text4.innerHTML = debt['name'] + " Payment: $" + debt['month_pay'].toFixed(2);
-                    document.body.appendChild(text4);
+                    schContainer.appendChild(text4);
                     
                 }
                 Total_DoT.push(TOTAL_DEBT);
-                //debtTime.push(debtList.map(d => d['amount']));
+                debtTime.push(debtList.map(d => d['amount']));
             }
 
             
-            document.body.appendChild(document.createElement("br"));
+            schContainer.appendChild(document.createElement("br"));
 
             var text5 = document.createElement('p');
             text5.innerHTML = "Month " + month + ":";
-            document.body.appendChild(text5);
+            schContainer.appendChild(text5);
 
            
             var text6 = document.createElement('p');
-            text6.innerHTML = " DEBT FULLY PAID OFF BITCHES";
-            document.body.appendChild(text6);
+            text6.innerHTML = " DEBT FULLY PAID OFF";
+            schContainer.appendChild(text6);
 
+            //Plotting 
+
+            // Create months array 
+            var months = []
+            for (var i = 1; i <= Total_DoT.length; i++) {
+                months.push(i);
+            }
+
+            const debtGraph = {
+                x: months,
+                y: Total_DoT,
+                type: 'scatter',
+                name: 'Total Debt'
+            };
+
+            const debtGraphs = [];
+            debtGraphs.push(debtGraph)
+            
+            for (let i = 0; i < debtList.length; i++) {
+                const debtHistory = debtTime.map(debtMonth => debtMonth[i]);
+                debtGraphs.push({
+                    x: months,
+                    y: debtHistory,
+                    type: 'scatter',
+                    name: debtList[i]['name']
+                });
+            }
+
+            const layout = {
+                title: 'Debt Over Time',
+                xaxis: {
+                    title: 'Month',
+                    range: [1,],
+                    fixedrange: true
+                    
+                },
+                yaxis: {
+                    title: 'Total Debt',
+                    fixedrange: true
+                }
+            };
+            
+            var plotlyContainer = document.createElement('div');
+            plotlyContainer.id = "Debt Schedule";
+
+            document.body.appendChild(plotlyContainer);
+            document.body.appendChild(schContainer);
+
+            if (debtList.length <= 1) {
+                Plotly.newPlot("Debt Schedule", [debtGraph], layout);
+            } else {
+                Plotly.newPlot("Debt Schedule", debtGraphs, layout);
+            }
         }
 
+        function Clear() {
+            var clButton = document.getElementById("schContainer");
+            var removeButton = document.getElementById("clearButton")
+            if (clButton) {
+                document.body.removeChild(clButton);
+                document.body.removeChild(removeButton);
+            }
+        }
     </script>
 </body>
 </html>
