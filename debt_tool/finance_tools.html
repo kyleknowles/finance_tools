@@ -7,7 +7,10 @@
    <title>Finance Tools</title>
    <h1>Debt Payoff Calculator</h1>
    <h4>This program gives you the mathematically best way to pay off your debt, using the avalanche method.
-    
+       After making all minimum payments, additional payments are preferentially directed to paying down debt 
+       with the highest interest first. In order to get out of high interest debt, we recommend only spending
+       money on neccessary expenses and putting the rest towards your debt. This would minimize the time needed 
+       for debt payoff and the total interest paid.
    </h4>
 
    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -228,7 +231,7 @@
             var postIncome = document.createElement("p");
             postIncome.innerHTML = "Monthly Income After Expenses: $" + incomePostExpenses;        
 
-            if (!isNaN(TOTAL_DEBT) && !isNaN(incomePostExpenses)) {
+            if (isNaN(monthIncome) || isNaN(monthExpenses)) {
                 alert("Please enter a valid number.");
                 return 0;
             }
@@ -367,8 +370,15 @@
             var plotlyContainer = document.createElement('div');
             plotlyContainer.id = "Debt Schedule";
 
-            document.body.appendChild(plotlyContainer);
-            document.body.appendChild(schContainer);
+            var finalContainer = document.createElement('div');
+            finalContainer.for = "finalContainer";
+            finalContainer.id = "finalContainer";
+        
+            finalContainer.appendChild(plotlyContainer);
+            finalContainer.appendChild(schContainer);
+
+            document.body.appendChild(finalContainer);
+           
 
             if (debtList.length <= 1) {
                 Plotly.newPlot("Debt Schedule", [debtGraph], layout);
@@ -378,7 +388,7 @@
         }
 
         function Clear() {
-            var clButton = document.getElementById("schContainer");
+            var clButton = document.getElementById("finalContainer");
             var removeButton = document.getElementById("clearButton")
             if (clButton) {
                 document.body.removeChild(clButton);
