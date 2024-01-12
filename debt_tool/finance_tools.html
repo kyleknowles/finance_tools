@@ -6,15 +6,16 @@
    <link rel="stylesheet" href="financetools.css" />
    <title>Finance Tools</title>
    <h1>Debt Payoff Calculator</h1>
-   <h4>This program gives you the mathematically best way to pay off your debt, using the avalanche method.
+   <h4>
+       This program gives you the mathematically best way to pay off your debt, using the avalanche method.
        After making all minimum payments, additional payments are preferentially directed to paying down debt 
        with the highest interest first. In order to get out of high interest debt, we recommend only spending
        money on neccessary expenses and putting the rest towards your debt. This would minimize the time needed 
        for debt payoff and the total interest paid.
    </h4>
-
    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
+
 <body>
     <label for="debtNum">Number of Debts:</label>
     <input type="text" id="debtNum" name="debtNum" placeholder="0">
@@ -57,9 +58,7 @@
                         var container = document.createElement("div");
                         container.appendChild(document.createElement("br"));
                         document.body.appendChild(container);
-
                         
-
                         for (var y = 0; y < 4; y++) {
                                 
                             var label = document.createElement("label");
@@ -122,7 +121,7 @@
                         
                     var incomeLabel = document.createElement("label");
                     incomeLabel.for = "income";
-                    incomeLabel.innerHTML = "Monthly Take-Home Income: $";
+                    incomeLabel.innerHTML = "Monthly Debt Payment: $";
                     incomeInput.id = "income";
                     incomeInput.placeholder = "0"
 
@@ -130,22 +129,6 @@
                     container2.appendChild(incomeLabel);
                     container2.appendChild(incomeInput);
 
-                    container2.appendChild(document.createElement("br"));
-
-                    var expensesInput = document.createElement("input");
-                    expensesInput.type = "text";
-                    expensesInput.name = "dynamicInput";
-                    expensesInput.placeholder = "0";
-
-                    var expensesLabel = document.createElement("label");
-                    expensesLabel.for = "expenses";
-                        
-                    expensesLabel.innerHTML = "Monthly Expenses (not including debt): $";
-                    expensesInput.id = "expenses";
-                    expensesInput.placeholder = "0"
-
-                    container2.appendChild(expensesLabel);
-                    container2.appendChild(expensesInput);
 
                     container2.appendChild(document.createElement("br"));
                     document.body.appendChild(container2);
@@ -219,25 +202,19 @@
             
             var totalDebt = document.createElement("p");
 
-            
             totalDebt.innerHTML = "Starting Total Debt: $" + TOTAL_DEBT;
     
             schContainer.appendChild(totalDebt);
 
+
             var monthIncome = parseFloat(document.getElementById("income").value);
-            var monthExpenses = parseFloat(document.getElementById("expenses").value);
-            var incomePostExpenses = monthIncome - monthExpenses;
 
-            var postIncome = document.createElement("p");
-            postIncome.innerHTML = "Monthly Income After Expenses: $" + incomePostExpenses;        
 
-            if (isNaN(monthIncome) || isNaN(monthExpenses)) {
+            if (isNaN(monthIncome)) {
                 alert("Please enter a valid number.");
                 return 0;
             }
                 
-
-            schContainer.appendChild(postIncome);
             
             // Initialize Values
             var month = 1;
@@ -250,7 +227,7 @@
             while (TOTAL_DEBT > 0) {
                 schContainer.appendChild(document.createElement("br"));
 
-                var money_left = incomePostExpenses;
+                var money_left = monthIncome;
                 
                 var text2 = document.createElement("p");
                 text2.innerHTML = "Month " + month + ":";
@@ -337,7 +314,7 @@
                 x: months,
                 y: Total_DoT,
                 type: 'scatter',
-                name: 'Total Debt'
+                name: 'Total Debt',
             };
 
             const debtGraphs = [];
@@ -349,12 +326,17 @@
                     x: months,
                     y: debtHistory,
                     type: 'scatter',
-                    name: debtList[i]['name']
+                    name: debtList[i]['name'],
+                    mode: 'lines',
+                    line: {
+                        dash: 'dash',
+                    }
                 });
             }
 
             const layout = {
                 title: 'Debt Over Time',
+
                 xaxis: {
                     title: 'Month',
                     range: [1,],
@@ -364,7 +346,7 @@
                 yaxis: {
                     title: 'Total Debt',
                     fixedrange: true
-                }
+                },
             };
             
             var plotlyContainer = document.createElement('div');
