@@ -283,7 +283,14 @@
                     TOTAL_DEBT += debt['amount'];   
                     var text4 = document.createElement('p');
                     text4.innerHTML = debt['name'] + " Payment: $" + debt['month_pay'].toFixed(2);
-                    schContainer.appendChild(text4);
+
+                    if ((debt['month_pay'] == 0) && (debt['amount'] == 0)) {
+                        var paidOff = document.createElement('p');
+                        paidOff.innerHTML = debt['name'] + ": FULLY PAID OFF";
+                        schContainer.appendChild(paidOff);
+                    } else {
+                        schContainer.appendChild(text4);
+                    }
                     
                 }
                 Total_DoT.push(TOTAL_DEBT);
