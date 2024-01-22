@@ -25,6 +25,15 @@
             padding-left: 10px;
         }
 
+        .percent-symbol {
+            position: absolute;
+            transform: translate(-20px, 1px);
+        }
+
+        .percent-textbox {
+            padding-right: 20px;
+        }
+
 
    </style>
 
@@ -121,8 +130,16 @@
                                 symbolSpan.textContent = "$";
                                 container.appendChild(symbolSpan);
                                 newInput.classList.add("dollar-textbox");
+                            } else if (y == 2) {
+                                newInput.classList.add("percent-textbox");
                             }
                             container.appendChild(newInput);
+                            if (y == 2) {
+                                var percentSpan = document.createElement("span");
+                                percentSpan.classList.add("percent-symbol");
+                                percentSpan.textContent = "%";
+                                container.appendChild(percentSpan);
+                            }
                           
                             container.appendChild(document.createElement("br"));
                                 
