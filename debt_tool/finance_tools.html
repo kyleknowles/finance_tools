@@ -242,7 +242,7 @@
                 return debt['amount'];
             }
 
-            function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime) {
+            function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, totalDebtPaid){
                 while (TOTAL_DEBT > 0) {
 
                     if (!isFinite(TOTAL_DEBT)) {
@@ -291,11 +291,14 @@
                             debt['amount'] -= debt['min_mp'];
                             money_left -= debt['min_mp'];
                             debt['month_pay'] += debt['min_mp'];
+                            totalDebtPaid += debt['min_mp'];
                         } else {
                             // min monthly is more than money left
                             debt['amount'] -= money_left;
                             debt['month_pay'] += money_left;
+                            totalDebtPaid += money_left;
                             money_left = 0;
+                            
                         }
                     }
                     TOTAL_DEBT = 0;
@@ -305,11 +308,13 @@
                         var debt = debtList[z];
                         if (debt['amount'] <= money_left) {
                             debt['month_pay'] += debt['amount'];
+                            totalDebtPaid += debt['amount'];
                             money_left -= debt['amount'];
                             debt['amount'] = 0;
                         } else {
                             debt['amount'] -= money_left;
                             debt['month_pay'] += money_left;
+                            totalDebtPaid += money_left;
                             money_left = 0;
                         }
 
@@ -318,6 +323,7 @@
                         TOTAL_DEBT += debt['amount'];   
                         var text4 = document.createElement('p');
                         text4.innerHTML = debt['name'] + " Payment: $" + debt['month_pay'].toFixed(2);
+                        
 
                         if ((debt['month_pay'] == 0) && (debt['amount'] == 0)) {
                             var paidOff = document.createElement('p');
@@ -344,7 +350,7 @@
                 text6.innerHTML = " DEBT FULLY PAID OFF";
                 schContainer.appendChild(text6);
 
-                return [Total_DoT, debtTime, schContainer];
+                return [Total_DoT, debtTime, schContainer, totalDebtPaid];
             }
 
             
@@ -415,17 +421,21 @@
             finalContainer.for = "finalContainer";
             finalContainer.id = "finalContainer";
 
-            var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime);
+            
+            var initialDebt = TOTAL_DEBT;
+
+            var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, 0);
             
             var Total_DoT = avalancheArray[0];
             var debtTime = avalancheArray[1];
             var schContainer = avalancheArray[2];
+            var totalDebtPaid = avalancheArray[3];
 
             var debtTimeSnowball = [debtListSnowball.map(d => d['amount'])];
             var TOTAL_DEBT_SNOWBALL = TOTAL_DEBT;
             var Total_DoT_Snowball = Total_DoT;
 
-            var snowballArray = calculateDebtPayoff(TOTAL_DEBT_SNOWBALL, Total_DoT_Snowball, debtTimeSnowball);
+            var snowballArray = calculateDebtPayoff(TOTAL_DEBT_SNOWBALL, Total_DoT_Snowball, debtTimeSnowball, 0);
 
             if (avalancheArray == 0) {
                 return 0;
@@ -481,7 +491,27 @@
             var plotlyContainer = document.createElement('div');
             plotlyContainer.id = "Debt Schedule";
 
-        
+
+            var keyInfoContainer = document.createElement('p');
+
+            var debtPaidMessage = document.createElement('p');
+            debtPaidMessage.innerHTML = "Total Debt Paid: $" + totalDebtPaid.toFixed(2).toString();
+            keyInfoContainer.appendChild(debtPaidMessage);
+
+            var principalPaidMessage = document.createElement('p');
+            principalPaidMessage.innerHTML = "Total Pricipal Paid: $" + initialDebt.toFixed(2).toString();
+            keyInfoContainer.appendChild(principalPaidMessage);
+
+            var interestPaidMessage = document.createElement('p');
+            interestPaidMessage.innerHTML = "Total Interest Paid: $" + (totalDebtPaid-initialDebt).toFixed(2).toString();
+            keyInfoContainer.appendChild(interestPaidMessage);
+            
+
+            var debtPaymentTime = document.createElement('p');
+            debtPaymentTime.innerHTML = "Debt is Paid Off in " + month.toString() + " Months"; 
+            keyInfoContainer.appendChild(debtPaymentTime);
+
+            finalContainer.appendChild(keyInfoContainer);
             finalContainer.appendChild(plotlyContainer);
             finalContainer.appendChild(schContainer);
 
