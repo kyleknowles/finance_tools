@@ -14,6 +14,20 @@
        for debt payoff and the total interest paid.
    </h4>
    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+   <style> 
+        .symbol {
+            position: absolute;
+            transform: translate(2px, 1px);
+        }
+
+        .dollar-textbox {
+            padding-left: 10px;
+        }
+
+
+   </style>
+
 </head>
 
 <body>
@@ -78,7 +92,7 @@
                             } else if (y == 1) {
                                
                                 label.for = "debtAmount" +  (i+1);
-                                label.innerHTML = "  Debt Amount $";
+                                label.innerHTML = "  Debt Amount: $";
                                 newInput.id = "debtAmount" +  (i+1);
                                 newInput.placeholder = "0";
                     
@@ -115,18 +129,25 @@
                     container2.appendChild(document.createElement("br"));
 
                     var incomeInput = document.createElement("input");
+                    incomeInput.classList.add("dollar-textbox");
                     incomeInput.type = "text";
                     incomeInput.name = "dynamicInput";
-                    incomeInput.placeholder = "enter";
+                    
                         
                     var incomeLabel = document.createElement("label");
                     incomeLabel.for = "income";
-                    incomeLabel.innerHTML = "Monthly Debt Payment: $";
+                    incomeLabel.innerHTML = "Monthly Debt Payment: ";
+
                     incomeInput.id = "income";
-                    incomeInput.placeholder = "0"
+                    incomeInput.placeholder = "0";  //make 0
+                  
+                    var symbolSpan = document.createElement("span");
+                    symbolSpan.classList.add("symbol");
+                    symbolSpan.textContent = "$";
 
 
                     container2.appendChild(incomeLabel);
+                    container2.appendChild(symbolSpan);
                     container2.appendChild(incomeInput);
 
 
@@ -135,7 +156,7 @@
 
                     
                     var addButton = document.createElement("button");
-                    addButton.id = "addButton"
+                    addButton.id = "addButton";
                     addButton.innerHTML = "Calculate";
                     addButton.onclick = function() {
                         calculateDebts(); 
