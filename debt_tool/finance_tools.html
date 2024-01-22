@@ -50,6 +50,8 @@
         var startDebt = 0;
 
         var containers = [];
+
+
         function addDebts() {
             Clear();
             var debtNum = parseInt(document.getElementById("debtNum").value);
@@ -59,12 +61,18 @@
                     document.body.removeChild(existingButton);
                 }
 
+                var incomeTest = document.getElementById("income");
+                if (incomeTest) {
+                    var currIncome = (document.getElementById("income").value).toString();
+                } 
                
                 var incContainer = document.getElementById("incContainer");
                 if (incContainer) {
                     document.body.removeChild(incContainer);
                 }
-                
+
+              
+
 
                 if (startDebt > debtNum) {
                     var difference = startDebt - debtNum;
@@ -156,18 +164,26 @@
 
                     container2.appendChild(document.createElement("br"));
 
+
+                   
+
                     var incomeInput = document.createElement("input");
                     incomeInput.classList.add("dollar-textbox");
                     incomeInput.type = "text";
                     incomeInput.name = "dynamicInput";
                     
-                        
                     var incomeLabel = document.createElement("label");
                     incomeLabel.for = "income";
                     incomeLabel.innerHTML = "Monthly Debt Payment: ";
 
+
                     incomeInput.id = "income";
-                    incomeInput.placeholder = "0";  //make 0
+                    incomeInput.placeholder = "0"; 
+
+                    
+                    if (currIncome != undefined) {
+                        incomeInput.value = currIncome;
+                    }
                   
                     var symbolSpan = document.createElement("span");
                     symbolSpan.classList.add("symbol");
