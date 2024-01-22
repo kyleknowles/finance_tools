@@ -246,7 +246,20 @@
                 while (TOTAL_DEBT > 0) {
 
                     if (!isFinite(TOTAL_DEBT)) {
-                        return 0;
+
+                        var fail = document.createElement('p');
+                        fail.innerHTML =  `
+                                         <p>It's impossible to pay off your debt with that monthly debt payment.</p>
+                                         <p>Try increasing your monthly debt payment by cutting back on unnecessary expenses,</p>
+                                         <p>increasing your monthly income through getting a higher paying job or working more hours,</p>
+                                         <p>committing tax fraud, and/or lowering your interest rate(s) through debt consolidation.</p>
+                                         `;
+
+
+                         finalContainer.appendChild(fail);
+                         document.body.appendChild(finalContainer);
+                        
+                         return 0;
                     }
 
                     schContainer.appendChild(document.createElement("br"));
@@ -392,6 +405,10 @@
             var Total_DoT = [TOTAL_DEBT];
             var debtTime = [debtList.map(d => d['amount'])];
 
+            var finalContainer = document.createElement('div');
+            finalContainer.for = "finalContainer";
+            finalContainer.id = "finalContainer";
+
             var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime);
             
             var Total_DoT = avalancheArray[0];
@@ -405,21 +422,8 @@
             var snowballArray = calculateDebtPayoff(TOTAL_DEBT_SNOWBALL, Total_DoT_Snowball, debtTimeSnowball);
 
             if (avalancheArray == 0) {
-                var finalContainer = document.createElement('p');
-
-                var fail = document.createElement('p');
-                fail.innerHTML =  `
-                                  <p>It's impossible to pay off your debt with that monthly debt payment.</p>
-                                  <p>Try increasing your monthly debt payment by cutting back on unnecessary expenses,</p>
-                                  <p> increasing your monthly income through getting a higher paying job or working more hours,</p>
-                                  <p> committing tax fraud, and/or lowering your interest rate(s) through debt consolidation.</p>
-                                  `;
-
-        
-                document.body.appendChild(fail);
                 return 0;
             }
-
 
             //Plotting 
 
@@ -471,9 +475,6 @@
             var plotlyContainer = document.createElement('div');
             plotlyContainer.id = "Debt Schedule";
 
-            var finalContainer = document.createElement('div');
-            finalContainer.for = "finalContainer";
-            finalContainer.id = "finalContainer";
         
             finalContainer.appendChild(plotlyContainer);
             finalContainer.appendChild(schContainer);
