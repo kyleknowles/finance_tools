@@ -244,6 +244,11 @@
 
             function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime) {
                 while (TOTAL_DEBT > 0) {
+
+                    if (!isFinite(TOTAL_DEBT)) {
+                        return 0;
+                    }
+
                     schContainer.appendChild(document.createElement("br"));
 
                     var money_left = monthIncome;
@@ -399,7 +404,23 @@
 
             var snowballArray = calculateDebtPayoff(TOTAL_DEBT_SNOWBALL, Total_DoT_Snowball, debtTimeSnowball);
 
-          
+            if (avalancheArray == 0) {
+                var finalContainer = document.createElement('p');
+
+                var fail = document.createElement('p');
+                fail.innerHTML =  `
+                                  <p>It's impossible to pay off your debt with that monthly debt payment.</p>
+                                  <p>Try increasing your monthly debt payment by cutting back on unnecessary expenses,</p>
+                                  <p> increasing your monthly income through getting a higher paying job or working more hours,</p>
+                                  <p> committing tax fraud, and/or lowering your interest rate(s) through debt consolidation.</p>
+                                  `;
+
+        
+                document.body.appendChild(fail);
+                return 0;
+            }
+
+
             //Plotting 
 
             // Create months array 
