@@ -67,6 +67,9 @@
                     }
 
                 } else {
+                     
+                
+
                     for (var i = startDebt; i < debtNum; i++) {
                         startDebt = startDebt + 1;
                         var container = document.createElement("div");
@@ -92,7 +95,7 @@
                             } else if (y == 1) {
                                
                                 label.for = "debtAmount" +  (i+1);
-                                label.innerHTML = "  Debt Amount: $";
+                                label.innerHTML = "  Debt Amount: ";
                                 newInput.id = "debtAmount" +  (i+1);
                                 newInput.placeholder = "0";
                     
@@ -106,13 +109,21 @@
                             } else { // y == 3
                              
                                 label.for = "debtMin" + (i+1);
-                                label.innerHTML = "  Min Monthly Payment: $";
+                                label.innerHTML = "  Min Monthly Payment: ";
                                 newInput.id = "debtMin" + (i+1);
                                 newInput.placeholder = "0";
                             }
 
                             container.appendChild(label);
+                            if ((y != 0) && (y != 2)) {
+                                var symbolSpan = document.createElement("span");
+                                symbolSpan.classList.add("symbol");
+                                symbolSpan.textContent = "$";
+                                container.appendChild(symbolSpan);
+                                newInput.classList.add("dollar-textbox");
+                            }
                             container.appendChild(newInput);
+                          
                             container.appendChild(document.createElement("br"));
                                 
                         }
