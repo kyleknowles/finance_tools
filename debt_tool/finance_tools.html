@@ -383,11 +383,11 @@
                 }
             }
 
-            var debtListSnowball = debtList;
+            //var debtListSnowball = debtList;
 
             debtList.sort((a, b) => interestSort(b) - interestSort(a));
 
-            debtListSnowball.sort((a, b) => amountSort(b) - amountSort(a));
+           //debtListSnowball.sort((a, b) => amountSort(b) - amountSort(a));
             
             var totalDebt = document.createElement("p");
 
@@ -430,9 +430,9 @@
             var schContainer = avalancheArray[2];
             var totalDebtPaid = avalancheArray[3];
 
-            var debtTimeSnowball = [debtListSnowball.map(d => d['amount'])];
-            var TOTAL_DEBT_SNOWBALL = TOTAL_DEBT;
-            var Total_DoT_Snowball = Total_DoT;
+            //var debtTimeSnowball = [debtListSnowball.map(d => d['amount'])];
+            //var TOTAL_DEBT_SNOWBALL = TOTAL_DEBT;
+            //var Total_DoT_Snowball = Total_DoT;
 
             //var snowballArray = calculateDebtPayoff(TOTAL_DEBT_SNOWBALL, Total_DoT_Snowball, debtTimeSnowball, 0);
 
