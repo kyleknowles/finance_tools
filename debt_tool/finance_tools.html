@@ -34,7 +34,6 @@
             padding-right: 20px;
         }
 
-
    </style>
 
 </head>
@@ -54,7 +53,7 @@
 
         function addDebts() {
             Clear();
-            var debtNum = parseInt(document.getElementById("debtNum").value);
+            var debtNum = parseInt(document.getElementById("debtNum").value.replace(",",""));
             if (!isNaN(debtNum)) {
                 var existingButton = document.getElementById("addButton");
                 if (existingButton) {
@@ -356,9 +355,9 @@
             
             for (var i = 1; i <= startDebt; i++) {
                 var debtName = document.getElementById("debtName" + i).value;
-                var debtAmount = parseFloat(document.getElementById("debtAmount" + i).value);
-                var debtInterest = parseFloat(document.getElementById("debtInterest" + i).value);
-                var debtMin = parseFloat(document.getElementById("debtMin" + i).value);
+                var debtAmount = parseFloat(document.getElementById("debtAmount" + i).value.replace(",",""));
+                var debtInterest = parseFloat(document.getElementById("debtInterest" + i).value.replace(",",""));
+                var debtMin = parseFloat(document.getElementById("debtMin" + i).value.replace(",",""));
                 
                 if (!isNaN(debtAmount) && !isNaN(debtInterest) && !isNaN(debtMin)) { 
                     var debtInfo = {
@@ -401,7 +400,7 @@
             schContainer.appendChild(scheduleTitle);
 
 
-            var monthIncome = parseFloat(document.getElementById("income").value);
+            var monthIncome = parseFloat(document.getElementById("income").value.replace(",",""));
 
 
             if (isNaN(monthIncome)) {
