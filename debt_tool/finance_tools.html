@@ -6,13 +6,13 @@
    <link rel="stylesheet" href="financetools.css" />
    <title>Finance Tools</title>
    <h1>Debt Payoff Calculator</h1>
-   <h4>
+   <h2>
        This program gives you the mathematically best way to pay off your debt, using the avalanche method.
        After making all minimum payments, additional payments are preferentially directed to paying down debt 
        with the highest interest first. In order to get out of high interest debt, we recommend only spending
        money on neccessary expenses and putting the rest towards your debt. This would minimize the time needed 
        for debt payoff and the total interest paid.
-   </h4>
+   </h2>
    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
    <style> 
@@ -39,7 +39,7 @@
 </head>
 
 <body>
-    <label for="debtNum">Number of Debts:</label>
+    <label for="debtNum">Number of Debts(not including mortgage):</label>
     <input type="text" id="debtNum" name="debtNum" placeholder="0">
 
     <button onclick="addDebts()">Enter</button>
@@ -497,12 +497,15 @@
             debtPaidMessage.innerHTML = "Total Debt Paid: $" + totalDebtPaid.toFixed(2).toString();
             keyInfoContainer.appendChild(debtPaidMessage);
 
+            var principalPercentage = (initialDebt / totalDebtPaid) * 100;
+            var interestPercentage = ((totalDebtPaid-initialDebt) / totalDebtPaid) * 100;
+
             var principalPaidMessage = document.createElement('p');
-            principalPaidMessage.innerHTML = "Total Pricipal Paid: $" + initialDebt.toFixed(2).toString();
+            principalPaidMessage.innerHTML = "Total Pricipal Paid: $" + initialDebt.toFixed(2).toString() + " (" + principalPercentage.toFixed(2).toString() + "%)"; 
             keyInfoContainer.appendChild(principalPaidMessage);
 
             var interestPaidMessage = document.createElement('p');
-            interestPaidMessage.innerHTML = "Total Interest Paid: $" + (totalDebtPaid-initialDebt).toFixed(2).toString();
+            interestPaidMessage.innerHTML = "Total Interest Paid: $" + (totalDebtPaid-initialDebt).toFixed(2).toString() + " (" + interestPercentage.toFixed(2).toString() + "%)"; 
             keyInfoContainer.appendChild(interestPaidMessage);
             
 
