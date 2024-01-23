@@ -217,10 +217,8 @@
             }
         }
 
-        function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, month, monthIncome) {
-
-           
-
+        function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, finalContainer, monthIncome, month) {
+            
             while (TOTAL_DEBT > 0) {
             
 
@@ -328,7 +326,7 @@
             text6.innerHTML = " DEBT FULLY PAID OFF";
             schContainer.appendChild(text6);
             
-       
+            
             
             return [Total_DoT, debtTime, schContainer, totalDebtPaid, month];
         }
@@ -426,14 +424,16 @@
             var initialDebt = TOTAL_DEBT;
 
      
-
-            var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, 0, schContainer, month, monthIncome);
-
+            
+            var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, 0, schContainer, finalContainer, monthIncome, month);
+           
 
             var Total_DoT = avalancheArray[0];
             var debtTime = avalancheArray[1];
             var schContainer = avalancheArray[2];
             var totalDebtPaid = avalancheArray[3];
+            var month = avalancheArray[4];
+            
 
             //var debtTimeSnowball = [debtListSnowball.map(d => d['amount'])];
             //var TOTAL_DEBT_SNOWBALL = TOTAL_DEBT;
