@@ -216,6 +216,122 @@
                 alert("Please enter a valid number.");
             }
         }
+
+        function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, month, monthIncome) {
+
+           
+
+            while (TOTAL_DEBT > 0) {
+            
+
+                if (!isFinite(TOTAL_DEBT)) {
+                    var fail = document.createElement('p');
+                    fail.innerHTML = `
+                                    <p>It's impossible to pay off your debt with that monthly debt payment.</p>
+                                    <p>Try increasing your monthly debt payment by cutting back on unnecessary expenses,</p>
+                                    <p>increasing your monthly income through getting a higher paying job or working more hours,</p>
+                                    <p>committing tax fraud, and/or lowering your interest rate(s) through debt consolidation.</p>
+                                    `;
+                    finalContainer.appendChild(fail);
+                    document.body.appendChild(finalContainer);
+                    return 0;
+                }
+
+                schContainer.appendChild(document.createElement("br"));
+
+                
+
+                var money_left = monthIncome;
+                    
+                var text2 = document.createElement("p");
+                text2.innerHTML = "Month " + month + ":";
+                schContainer.appendChild(text2);
+
+                var text3 = document.createElement('p');
+                text3.innerHTML = " STARTING TOTAL DEBT: $" + TOTAL_DEBT.toFixed(2);
+                schContainer.appendChild(text3);
+                month++;
+
+                // update dict values (min mps and monthly totals )
+                // pay min mps
+              
+
+                for (var x = 0; x < debtList.length; x++) {
+                    // update dictionary values
+                    var debt = debtList[x];
+                    debt['month_pay'] = 0;
+                    if (debt['amount'] < debt['min_mp']) {
+                        debt['min_mp'] = debt['amount'];
+                    }
+
+                    // pay min mps
+                    if (debt['min_mp'] <= money_left) {
+                        debt['amount'] -= debt['min_mp'];
+                        money_left -= debt['min_mp'];
+                        debt['month_pay'] += debt['min_mp'];
+                        totalDebtPaid += debt['min_mp'];
+                    } else {
+                        // min monthly is more than money left
+                        debt['amount'] -= money_left;
+                        debt['month_pay'] += money_left;
+                        totalDebtPaid += money_left;
+                        money_left = 0;
+                            
+                    }
+                }
+                TOTAL_DEBT = 0;
+
+
+                // pay BEYOND min mps
+                for (var z = 0; z < debtList.length; z++) {
+                    var debt = debtList[z];
+                    if (debt['amount'] <= money_left) {
+                        debt['month_pay'] += debt['amount'];
+                        totalDebtPaid += debt['amount'];
+                        money_left -= debt['amount'];
+                        debt['amount'] = 0;
+                    } else {
+                        debt['amount'] -= money_left;
+                        debt['month_pay'] += money_left;
+                        totalDebtPaid += money_left;
+                        money_left = 0;
+                    }
+
+                    debt['amount'] = parseFloat((debt['amount'] * (1 + (debt['interest'] / 100) / 12)).toFixed(2));
+
+                    TOTAL_DEBT += debt['amount'];   
+                    var text4 = document.createElement('p');
+                    text4.innerHTML = debt['name'] + " Payment: $" + debt['month_pay'].toFixed(2);
+                    
+
+                    if ((debt['month_pay'] == 0) && (debt['amount'] == 0)) {
+                        var paidOff = document.createElement('p');
+                        paidOff.innerHTML = debt['name'] + ": FULLY PAID OFF";
+                        schContainer.appendChild(paidOff);
+                    } else {
+                        schContainer.appendChild(text4);
+                    }
+                        
+                }
+                Total_DoT.push(TOTAL_DEBT);
+                debtTime.push(debtList.map(d => d['amount']));
+            }
+  
+            
+            schContainer.appendChild(document.createElement("br"));
+
+            var text5 = document.createElement('p');
+            text5.innerHTML = "Month " + month + ":";
+            schContainer.appendChild(text5);
+            
+            var text6 = document.createElement('p');
+            text6.innerHTML = " DEBT FULLY PAID OFF";
+            schContainer.appendChild(text6);
+            
+       
+            
+            return [Total_DoT, debtTime, schContainer, totalDebtPaid, month];
+        }
     
         function calculateDebts() {
 
@@ -237,127 +353,8 @@
 
             var debtList = [];
             var TOTAL_DEBT = 0;
-
-            function interestSort(debt) {
-                return debt['interest'];
-            }
-
-            function amountSort(debt) {
-                return debt['amount'];
-            }
-
-            function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, totalDebtPaid){
-                while (TOTAL_DEBT > 0) {
-
-                    if (!isFinite(TOTAL_DEBT)) {
-
-                        var fail = document.createElement('p');
-                        fail.innerHTML =  `
-                                         <p>It's impossible to pay off your debt with that monthly debt payment.</p>
-                                         <p>Try increasing your monthly debt payment by cutting back on unnecessary expenses,</p>
-                                         <p>increasing your monthly income through getting a higher paying job or working more hours,</p>
-                                         <p>committing tax fraud, and/or lowering your interest rate(s) through debt consolidation.</p>
-                                         `;
-
-
-                         finalContainer.appendChild(fail);
-                         document.body.appendChild(finalContainer);
-                        
-                         return 0;
-                    }
-
-                    schContainer.appendChild(document.createElement("br"));
-
-                    var money_left = monthIncome;
-                    
-                    var text2 = document.createElement("p");
-                    text2.innerHTML = "Month " + month + ":";
-                    schContainer.appendChild(text2);
-
-                    var text3 = document.createElement('p');
-                    text3.innerHTML = " STARTING TOTAL DEBT: $" + TOTAL_DEBT.toFixed(2);
-                    schContainer.appendChild(text3);
-                    month++;
-
-                    // update dict values (min mps and monthly totals )
-                    // pay min mps
-
-                    for (var x = 0; x < debtList.length; x++) {
-                        // update dictionary values
-                        var debt = debtList[x];
-                        debt['month_pay'] = 0;
-                        if (debt['amount'] < debt['min_mp']) {
-                            debt['min_mp'] = debt['amount'];
-                        }
-
-                        // pay min mps
-                        if (debt['min_mp'] <= money_left) {
-                            debt['amount'] -= debt['min_mp'];
-                            money_left -= debt['min_mp'];
-                            debt['month_pay'] += debt['min_mp'];
-                            totalDebtPaid += debt['min_mp'];
-                        } else {
-                            // min monthly is more than money left
-                            debt['amount'] -= money_left;
-                            debt['month_pay'] += money_left;
-                            totalDebtPaid += money_left;
-                            money_left = 0;
-                            
-                        }
-                    }
-                    TOTAL_DEBT = 0;
-
-                    // pay BEYOND min mps
-                    for (var z = 0; z < debtList.length; z++) {
-                        var debt = debtList[z];
-                        if (debt['amount'] <= money_left) {
-                            debt['month_pay'] += debt['amount'];
-                            totalDebtPaid += debt['amount'];
-                            money_left -= debt['amount'];
-                            debt['amount'] = 0;
-                        } else {
-                            debt['amount'] -= money_left;
-                            debt['month_pay'] += money_left;
-                            totalDebtPaid += money_left;
-                            money_left = 0;
-                        }
-
-                        debt['amount'] = parseFloat((debt['amount'] * (1 + (debt['interest'] / 100) / 12)).toFixed(2));
-
-                        TOTAL_DEBT += debt['amount'];   
-                        var text4 = document.createElement('p');
-                        text4.innerHTML = debt['name'] + " Payment: $" + debt['month_pay'].toFixed(2);
-                        
-
-                        if ((debt['month_pay'] == 0) && (debt['amount'] == 0)) {
-                            var paidOff = document.createElement('p');
-                            paidOff.innerHTML = debt['name'] + ": FULLY PAID OFF";
-                            schContainer.appendChild(paidOff);
-                        } else {
-                            schContainer.appendChild(text4);
-                        }
-                        
-                    }
-                    Total_DoT.push(TOTAL_DEBT);
-                    debtTime.push(debtList.map(d => d['amount']));
-                }
-
             
-                schContainer.appendChild(document.createElement("br"));
-
-                var text5 = document.createElement('p');
-                text5.innerHTML = "Month " + month + ":";
-                schContainer.appendChild(text5);
-
-            
-                var text6 = document.createElement('p');
-                text6.innerHTML = " DEBT FULLY PAID OFF";
-                schContainer.appendChild(text6);
-
-                return [Total_DoT, debtTime, schContainer, totalDebtPaid];
-            }
-
-            
+     
             for (var i = 1; i <= startDebt; i++) {
                 var debtName = document.getElementById("debtName" + i).value;
                 var debtAmount = parseFloat(document.getElementById("debtAmount" + i).value.replace(",",""));
@@ -428,8 +425,11 @@
             
             var initialDebt = TOTAL_DEBT;
 
-            var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, 0);
-            
+     
+
+            var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, 0, schContainer, month, monthIncome);
+
+
             var Total_DoT = avalancheArray[0];
             var debtTime = avalancheArray[1];
             var schContainer = avalancheArray[2];
@@ -531,6 +531,16 @@
                 Plotly.newPlot("Debt Schedule", debtGraphs, layout);
             }
         }
+
+        function interestSort(debt) {
+            return debt['interest'];
+        }
+
+        function amountSort(debt) {
+            return debt['amount'];
+        }
+
+
 
         function Clear() {
             var clButton = document.getElementById("finalContainer");
