@@ -91,7 +91,6 @@
                         document.body.removeChild(lastContainer);
                         startDebt = startDebt - 1;
                     }
-
                 } else {
                      
                     for (var i = startDebt; i < debtNum; i++) {
@@ -221,6 +220,8 @@
         }
 
         function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, finalContainer, monthIncome, month) {
+            var date = new Date();
+            var dateOptions = {year: 'numeric', month: 'long'};
             
             while (TOTAL_DEBT > 0) {
             
@@ -245,7 +246,12 @@
                 var money_left = monthIncome;
                     
                 var text2 = document.createElement("p");
-                text2.innerHTML = "Month " + month + ":";
+
+                var currentDate = new Date(date);
+                currentDate.setMonth(date.getMonth() + month);
+
+                
+                text2.innerHTML = currentDate.toLocaleDateString('en-US', dateOptions) + " (Month " + month + "):";
                 schContainer.appendChild(text2);
 
                 var text3 = document.createElement('p');
@@ -321,8 +327,12 @@
             
             schContainer.appendChild(document.createElement("br"));
 
+          
+
+            currentDate = new Date(date);
+            currentDate.setMonth(date.getMonth() + month);
             var text5 = document.createElement('p');
-            text5.innerHTML = "Month " + month + ":";
+            text5.innerHTML = currentDate.toLocaleDateString('en-US', dateOptions) + " (Month " + month + "):";
             schContainer.appendChild(text5);
             
             var text6 = document.createElement('p');
@@ -335,7 +345,6 @@
         }
     
         function calculateDebts() {
-
 
             var schContainer = document.createElement("div");
             schContainer.for = "schContainer";
@@ -415,7 +424,7 @@
                 
             
             // Initialize Values
-            var month = 1;
+            var month = 0;
             var Total_DoT = [TOTAL_DEBT];
             var debtTime = [debtList.map(d => d['amount'])];
 
@@ -516,6 +525,7 @@
             interestPaidMessage.innerHTML = "Total Interest Paid: $" + (totalDebtPaid-initialDebt).toFixed(2).toString() + " (" + interestPercentage.toFixed(2).toString() + "%)"; 
             keyInfoContainer.appendChild(interestPaidMessage);
             
+
 
             var debtPaymentTime = document.createElement('p');
             debtPaymentTime.innerHTML = "Debt is Paid Off in " + month.toString() + " Months"; 
