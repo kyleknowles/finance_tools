@@ -55,11 +55,18 @@
 
         var containers = [];
 
-
         function addDebts() {
             Clear();
             var debtNum = parseInt(document.getElementById("debtNum").value.replace(",",""));
             if (!isNaN(debtNum)) {
+
+                if (debtNum < 0) {
+                    alert("You're not funny, please enter a valid number.");
+                    return 0;
+                } else if (debtNum == 69) {
+                    alert("nice");
+                }
+
                 var existingButton = document.getElementById("addButton");
                 if (existingButton) {
                     document.body.removeChild(existingButton);
@@ -75,8 +82,6 @@
                     document.body.removeChild(incContainer);
                 }
 
-              
-
 
                 if (startDebt > debtNum) {
                     var difference = startDebt - debtNum;
@@ -89,8 +94,6 @@
 
                 } else {
                      
-                
-
                     for (var i = startDebt; i < debtNum; i++) {
                         startDebt = startDebt + 1;
                         var container = document.createElement("div");
@@ -539,8 +542,6 @@
         function amountSort(debt) {
             return debt['amount'];
         }
-
-
 
         function Clear() {
             var clButton = document.getElementById("finalContainer");
