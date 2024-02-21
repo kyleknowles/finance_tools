@@ -55,6 +55,8 @@
 
         var containers = [];
 
+        var monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
         function addDebts() {
             Clear();
             var debtNum = parseInt(document.getElementById("debtNum").value.replace(",",""));
@@ -222,8 +224,12 @@
         function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, finalContainer, monthIncome, month) {
             var date = new Date();
             var dateOptions = {year: 'numeric', month: 'long'};
-            
+            var realMonth = parseInt(date.getMonth());
+            var realYear = parseInt(date.getFullYear());
+           
             while (TOTAL_DEBT > 0) {
+                var currentYear = (parseInt((month+realMonth) / 12) + realYear).toString();
+                var currentMonth = monthList[(month+1) % 12]; 
             
 
                 if (!isFinite(TOTAL_DEBT)) {
@@ -247,16 +253,17 @@
                     
                 var text2 = document.createElement("p");
 
-                var currentDate = new Date(date);
-                currentDate.setMonth(date.getMonth() + month);
+                
+                text2.innerHTML = currentMonth + " " + currentYear + " (Month " + month + "):";
 
                 
-                text2.innerHTML = currentDate.toLocaleDateString('en-US', dateOptions) + " (Month " + month + "):";
+                document.body.appendChild(text2);
                 schContainer.appendChild(text2);
 
                 var text3 = document.createElement('p');
                 text3.innerHTML = " STARTING TOTAL DEBT: $" + TOTAL_DEBT.toFixed(2);
                 schContainer.appendChild(text3);
+                
                 month++;
 
                 // update dict values (min mps and monthly totals )
@@ -329,10 +336,12 @@
 
           
 
-            currentDate = new Date(date);
-            currentDate.setMonth(date.getMonth() + month);
             var text5 = document.createElement('p');
-            text5.innerHTML = currentDate.toLocaleDateString('en-US', dateOptions) + " (Month " + month + "):";
+
+            var currentYear = (parseInt((month+realMonth) / 12) + realYear).toString();
+            var currentMonth = monthList[(month+1) % 12]; 
+
+            text5.innerHTML =  currentMonth + " " + currentYear + " (Month " + month + "):";;
             schContainer.appendChild(text5);
             
             var text6 = document.createElement('p');
