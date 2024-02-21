@@ -224,14 +224,9 @@
         function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, finalContainer, monthIncome, month) {
             var date = new Date();
             var dateOptions = {year: 'numeric', month: 'long'};
-<<<<<<< HEAD
             var realMonth = parseInt(date.getMonth());
             var realYear = parseInt(date.getFullYear());
            
-=======
-            
-
->>>>>>> a361107a7de48d2ccbb19f3097a9fe0bffc31b1d
             while (TOTAL_DEBT > 0) {
                 var currentYear = (parseInt((month+realMonth) / 12) + realYear).toString();
                 var currentMonth = monthList[(month+1) % 12]; 
@@ -258,19 +253,11 @@
                     
                 var text2 = document.createElement("p");
 
-<<<<<<< HEAD
                 
                 text2.innerHTML = currentMonth + " " + currentYear + " (Month " + month + "):";
 
                 
                 document.body.appendChild(text2);
-=======
-                var currentDate = new Date(date);
-                currentDate.setMonth(date.getMonth() + month);
-
-
-                text2.innerHTML = currentDate.toLocaleDateString('en-US', dateOptions) + " (Month " + month + "):";
->>>>>>> a361107a7de48d2ccbb19f3097a9fe0bffc31b1d
                 schContainer.appendChild(text2);
 
                 var text3 = document.createElement('p');
@@ -349,19 +336,12 @@
 
           
 
-<<<<<<< HEAD
             var text5 = document.createElement('p');
 
             var currentYear = (parseInt((month+realMonth) / 12) + realYear).toString();
             var currentMonth = monthList[(month+1) % 12]; 
 
             text5.innerHTML =  currentMonth + " " + currentYear + " (Month " + month + "):";;
-=======
-            currentDate = new Date(date);
-            currentDate.setMonth(date.getMonth() + month);
-            var text5 = document.createElement('p');
-            text5.innerHTML = currentDate.toLocaleDateString('en-US', dateOptions) + " (Month " + month + "):";
->>>>>>> a361107a7de48d2ccbb19f3097a9fe0bffc31b1d
             schContainer.appendChild(text5);
             
             var text6 = document.createElement('p');
