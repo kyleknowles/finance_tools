@@ -14,30 +14,26 @@
        for debt payoff and the total interest paid.
    </h2>
    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="https://cdn.anychart.com/releases/8.0.1/js/anychart-core.min.js"></script>
+   <script src="https://cdn.anychart.com/releases/8.0.1/js/anychart-pie.min.js"></script>
+   <script src="https://cdn.anychart.com/releases/8.12.0/js/anychart-base.min.js"></script>
 
    <style> 
         h2 {
             font-size: 20px;
         }
-
         .symbol {
             position: absolute;
             transform: translate(2px, 1px);
         }
-
         .dollar-textbox {
             padding-left: 10px;
         }
-
         .percent-symbol {
             position: absolute;
             transform: translate(-20px, 1px);
         }
-
-        .percent-textbox {
-            padding-right: 20px;
-        }
-
 
    </style>
 
@@ -518,33 +514,66 @@
 
 
             var keyInfoContainer = document.createElement('p');
+            keyInfoContainer.id = "keyInfoContainer";
+            keyInfoContainer.style.display = 'flex';
+            keyInfoContainer.style.position = 'relative';
+
+            var messagesContainer = document.createElement('div');
+            messagesContainer.id = "messagesContainer";
+            messagesContainer.style.flex = 1;
+            messagesContainer.style.paddingRight = '20px';
+            messagesContainer.style.position = 'static';
+          
 
             var debtPaidMessage = document.createElement('p');
             debtPaidMessage.innerHTML = "Total Debt Paid: $" + totalDebtPaid.toFixed(2).toString();
-            keyInfoContainer.appendChild(debtPaidMessage);
+            messagesContainer.appendChild(debtPaidMessage);
+    
 
             var principalPercentage = (initialDebt / totalDebtPaid) * 100;
             var interestPercentage = ((totalDebtPaid-initialDebt) / totalDebtPaid) * 100;
 
+        
+
             var principalPaidMessage = document.createElement('p');
-            principalPaidMessage.innerHTML = "Total Pricipal Paid: $" + initialDebt.toFixed(2).toString() + " (" + principalPercentage.toFixed(2).toString() + "%)"; 
-            keyInfoContainer.appendChild(principalPaidMessage);
+            principalPaidMessage.innerHTML = "Total Principal Paid: $" + initialDebt.toFixed(2).toString() + " (" + principalPercentage.toFixed(2).toString() + "%)"; 
+            messagesContainer.appendChild(principalPaidMessage);
 
             var interestPaidMessage = document.createElement('p');
             interestPaidMessage.innerHTML = "Total Interest Paid: $" + (totalDebtPaid-initialDebt).toFixed(2).toString() + " (" + interestPercentage.toFixed(2).toString() + "%)"; 
-            keyInfoContainer.appendChild(interestPaidMessage);
+            messagesContainer.appendChild(interestPaidMessage);
             
-
 
             var debtPaymentTime = document.createElement('p');
             debtPaymentTime.innerHTML = "Debt is Paid Off in " + month.toString() + " Months"; 
-            keyInfoContainer.appendChild(debtPaymentTime);
+            messagesContainer.appendChild(debtPaymentTime);
+
+
+           var chartContainer = document.createElement('div');
+           chartContainer.id = "chartContainer";
+           chartContainer.style.position = "absolute";
+           chartContainer.style.paddingLeft = '250px';
+
+
+            var moneyPaid = [
+                {x: "Principal Paid", value: initialDebt},
+                {x: "Interest Paid", value: (totalDebtPaid-initialDebt)}
+            ];
+            chart = anychart.pie(moneyPaid);
+            chart.title("Principal vs Interest Paid");
+            chart.container(chartContainer);
+            chart.draw();
+
+            keyInfoContainer.appendChild(messagesContainer);
+            keyInfoContainer.appendChild(chartContainer);
+
 
             finalContainer.appendChild(keyInfoContainer);
+           
             finalContainer.appendChild(plotlyContainer);
             finalContainer.appendChild(schContainer);
-
             document.body.appendChild(finalContainer);
+            
            
 
             if (debtList.length <= 1) {
