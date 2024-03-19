@@ -40,7 +40,7 @@
 </head>
 
 <body>
-    <label for="debtNum">Number of Debts(not including mortgage):</label>
+    <label for="debtNum">Number of Debts (not including mortgage):</label>
     <input type="text" id="debtNum" name="debtNum" placeholder="0">
 
     <button onclick="addDebts()">Enter</button>
@@ -220,9 +220,9 @@
         function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, finalContainer, monthIncome, month) {
             var date = new Date();
             var dateOptions = {year: 'numeric', month: 'long'};
-            var realMonth = parseInt(date.getMonth());
+            var realMonth = parseInt(date.getMonth()) - 1;
             var realYear = parseInt(date.getFullYear());
-           
+            
             while (TOTAL_DEBT > 0) {
                 var currentYear = (parseInt((month+realMonth) / 12) + realYear).toString();
                 var currentMonth = monthList[(month+1) % 12]; 
