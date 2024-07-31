@@ -41,7 +41,7 @@
 
 <body>
     <label for="debtNum">Number of Debts (not including mortgage):</label>
-    <input type="text" id="debtNum" name="debtNum" placeholder="0">
+    <input type="text" id="debtNum" name="debtNum" placeholder="0" autocomplete="off">
 
     <button onclick="addDebts()">Enter</button>
 
@@ -168,9 +168,6 @@
 
                     container2.appendChild(document.createElement("br"));
 
-
-                   
-
                     var incomeInput = document.createElement("input");
                     incomeInput.classList.add("dollar-textbox");
                     incomeInput.type = "text";
@@ -220,12 +217,12 @@
         function calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, totalDebtPaid, schContainer, finalContainer, monthIncome, month) {
             var date = new Date();
             var dateOptions = {year: 'numeric', month: 'long'};
-            var realMonth = parseInt(date.getMonth()) - 1;
+            var realMonth = parseInt(date.getMonth());
             var realYear = parseInt(date.getFullYear());
             
             while (TOTAL_DEBT > 0) {
                 var currentYear = (parseInt((month+realMonth) / 12) + realYear).toString();
-                var currentMonth = monthList[(month+1) % 12]; 
+                var currentMonth = monthList[(month+realMonth) % 12]; 
             
 
                 if (!isFinite(TOTAL_DEBT)) {
@@ -400,11 +397,11 @@
                 }
             }
 
-            //var debtListSnowball = debtList;
+            var debtListSnowball = debtList;
 
             debtList.sort((a, b) => interestSort(b) - interestSort(a));
 
-           //debtListSnowball.sort((a, b) => amountSort(b) - amountSort(a));
+            
             
             var totalDebt = document.createElement("p");
 
@@ -424,9 +421,6 @@
                 alert("Please enter a valid number for \"Monthly Debt Payment.\"");
                 return 0;
             }
-
-
-                
             
             // Initialize Values
             var month = 0;
@@ -443,7 +437,6 @@
      
             
             var avalancheArray = calculateDebtPayoff(TOTAL_DEBT, Total_DoT, debtTime, debtList, 0, schContainer, finalContainer, monthIncome, month);
-           
 
             var Total_DoT = avalancheArray[0];
             var debtTime = avalancheArray[1];
@@ -451,10 +444,11 @@
             var totalDebtPaid = avalancheArray[3];
             var month = avalancheArray[4];
             
+            debtListSnowball.sort((a, b) => amountSort(b) - amountSort(a));
 
-            //var debtTimeSnowball = [debtListSnowball.map(d => d['amount'])];
-            //var TOTAL_DEBT_SNOWBALL = TOTAL_DEBT;
-            //var Total_DoT_Snowball = Total_DoT;
+            var debtTimeSnowball = [debtListSnowball.map(d => d['amount'])];
+            var TOTAL_DEBT_SNOWBALL = TOTAL_DEBT;
+            var Total_DoT_Snowball = Total_DoT;
 
             //var snowballArray = calculateDebtPayoff(TOTAL_DEBT_SNOWBALL, Total_DoT_Snowball, debtTimeSnowball, 0);
 
